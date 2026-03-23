@@ -17,9 +17,11 @@ module.exports = {
       'up-for-grabs',
       'first-timers-only',
       'low hanging fruit',
+      'enhancement'
     ],
     // Pool — 2-3 randomly selected per issue (adds variety, avoids spam signal)
     secondaryIssuePool: [
+/* 
       'easy',
       'beginner',
       'beginner-friendly',
@@ -27,6 +29,9 @@ module.exports = {
       'javascript',
       'documentation',
       'typescript',
+      'json',
+      'no setup'
+ */
     ],
     // Label for filtering community issues
     community: 'community',
@@ -40,7 +45,7 @@ module.exports = {
   config: {
     // Stale issue timing (in milliseconds)
     staleWarningAfterMs: 12 * 60 * 60 * 1000, // 12 hours
-    staleCloseAfterMs: 18 * 60 * 60 * 1000, // 18 hours
+    staleCloseAfterMs: 24 * 60 * 60 * 1000, // 24 hours
   },
 
   // =============================================================================
@@ -99,8 +104,8 @@ module.exports = {
       title: '## 🤖 Auto-Review: ✅ Passed',
       body: 'This {type} contribution has passed automated validation!',
       checks: [
-        'File format is correct',
-        'Content is valid',
+        'Changed files are in the allowed location',
+        'Changed JSON files parse successfully',
         'Related issue found',
       ],
       autoDetectedIssue:
@@ -180,7 +185,7 @@ module.exports = {
       body: 'This issue has been inactive for 12 hours.',
       action: "If you're still working on it, please comment to let us know!",
       consequence:
-        'Otherwise, it will be automatically closed in **6 hours** and made available for others to claim.',
+        'Otherwise, it will be automatically closed in **12 hours** and made available for others to claim.',
       footer: 'Need help? Just ask! 🙌',
     },
     unassignedWarning: {
@@ -194,14 +199,14 @@ module.exports = {
     },
     closed: {
       title: '🕐 **This issue has been automatically closed**',
-      reason: 'due to 18 hours of inactivity.',
+      reason: 'due to 12 hours after the stale warning.',
       reassurance:
         "Don't worry—the contribution opportunity will be re-posted for someone else to claim.",
       footer: 'Thanks for your interest in contributing to KanaDojo! 🙏',
     },
     unassignedClosed: {
       title: '🕐 **This unassigned issue has been automatically closed**',
-      reason: 'due to 18 hours without activity or a claim.',
+      reason: 'due to 6 hours without activity or a claim.',
       reassurance:
         "Don't worry—this task will be re-posted for someone else to claim.",
       footer: 'Interested in contributing? Keep an eye out for new issues! 🙏',
@@ -215,11 +220,12 @@ module.exports = {
     // Shared constants and helpers
     common: {
       titleTemplate:
-        '[Good First Issue] {emoji} Add new {issueType} - Beginner-Friendly Contribution (good-first-issue, <1 min)',
+        '[Good First Issue] {emoji} Add new {issueType} - Beginner-Friendly Contribution (good-first-issue, <1 min, no setup)',
+      shortTitleTemplate: '{emoji} Add new {issueType} {id}',
       difficulty: 'Easy (good first issue!)',
       instructionsHeader: '### 📝 Instructions',
       footer:
-        "### 🚀 Quick Info\n\n| | |\n|---|---|\n| **Difficulty** | Beginner / Easy |\n| **Time** | < 1 minute |\n| **Language** | TypeScript, JSON |\n| **Framework** | Next.js, React |\n| **Good for** | First-time contributors, Hacktoberfest |\n\n> **No coding experience required!** This is a simple JSON/data file edit — perfect for your first open source contribution.\n\n**Questions?** Comment below and we'll help! 🙌\n\n_This is a beginner-friendly, good first issue for first-time open source contributors. No coding experience needed — just edit a JSON file! See our [Beginner Contributing Guide](../blob/main/docs/CONTRIBUTING-BEGINNERS.md) for step-by-step instructions._",
+        "### 🚀 Quick Info\n\n| | |\n|---|---|\n| **Difficulty** | Beginner / Easy |\n| **Time** | < 1 minute |\n| **Language** | TypeScript, JSON |\n| **Framework** | Next.js, React |\n| **Good for** | First-time contributors, Hacktoberfest |\n\n> **No coding experience required!** This is a simple JSON/data file edit — perfect for your first open source contribution. No setup is required. \n\n**Questions?** Comment below and we'll help! 🙌\n\n_This is a beginner-friendly, good first issue for first-time open source contributors. No coding experience needed — just edit a JSON file! See our [Beginner Contributing Guide](../blob/main/docs/CONTRIBUTING-BEGINNERS.md) for step-by-step instructions._",
       // Welcome comment posted on freshly created issues for engagement signals
       welcomeComment:
         '👋 **This issue is up for grabs!** Comment below to claim it and get auto-assigned.\n\n' +
@@ -455,6 +461,28 @@ module.exports = {
       file: 'community/content/japanese-common-mistakes.json',
       itemType: 'common mistake object',
       prTitle: 'content: add new common mistake',
+    },
+    wallpaperUrl: {
+      title: 'Wallpaper URL #{id}',
+      header: '## Add Wallpaper URL',
+      category: 'Community Contribution - Wallpaper URL',
+      estimatedTime: '<1 min',
+      taskDescription:
+        'Paste this realistic-looking wallpaper URL string into our community wallpaper URL list.',
+      urlHeader: '### The Wallpaper URL String',
+      file: 'community/content/community-wallpaper-urls.json',
+      itemType: 'JSON string',
+      prTitle: 'content: add wallpaper url #{id}',
+    },
+    communityNote: {
+      title: 'Community Note Line #{id}',
+      header: '## Add Tiny Community Note Line',
+      category: 'Community Contribution - Community Note',
+      estimatedTime: '<1 min',
+      taskDescription:
+        'Add one exact markdown line to a low-priority community notes file.',
+      noteHeader: '### The Community Note Edit',
+      prTitle: 'docs: add community note line #{id}',
     },
     videoGameQuote: {
       title: 'Video Game Quote {id}',
