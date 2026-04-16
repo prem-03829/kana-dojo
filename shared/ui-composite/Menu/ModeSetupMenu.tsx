@@ -237,7 +237,7 @@ const ModeSetupMenu = ({
   return (
     <div className='fixed inset-0 z-[70] bg-(--background-color)'>
       <div className='h-full w-full overflow-x-hidden overflow-y-auto overscroll-y-contain'>
-        <div className='mx-auto flex min-h-[100dvh] w-full max-w-lg flex-col justify-start p-4 sm:justify-center'>
+        <div className='mx-auto flex min-h-[100dvh] w-full max-w-lg flex-col justify-center p-4'>
           <div className='w-full space-y-4'>
           {/* Header */}
           <div className='space-y-3 text-center'>
