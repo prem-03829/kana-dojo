@@ -361,7 +361,9 @@
     ],
     "correctIndex": 1,
     "completed": false,
-    "issued": true
+    "issued": false,
+    "completedBy": "jonathan7591",
+    "completedPR": 13571
   },
   {
     "id": 27,

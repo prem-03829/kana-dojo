@@ -1628,7 +1628,7 @@
   {
     "id": 272,
     "fact": "The phrase 'okagesama de' is used to reply modestly to compliments, similar to saying 'thanks to your support'.",
-    "issued": false,
+    "issued": true,
     "completed": false
   },
   {
@@ -1898,8 +1898,10 @@
   {
     "id": 317,
     "fact": "'Amanatto' are sweetened azuki beans often served with tea as a small snack.",
-    "issued": true,
-    "completed": false
+    "issued": false,
+    "completed": false,
+    "completedBy": "jonathan7591",
+    "completedPR": 13566
   },
   {
     "id": 318,
