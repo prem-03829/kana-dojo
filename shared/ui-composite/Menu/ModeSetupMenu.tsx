@@ -241,7 +241,11 @@ const ModeSetupMenu = ({
       <div className='absolute inset-0 -z-20 bg-(--background-color)' />
       <div className='absolute inset-0 -z-10'>
         <Suspense fallback={<></>}>
-          <Decorations expandDecorations={false} interactive={true} />
+          <Decorations
+            expandDecorations={false}
+            interactive={true}
+            context='mode-setup'
+          />
         </Suspense>
       </div>
       <div className='h-full w-full overflow-x-hidden overflow-y-auto overscroll-y-contain'>

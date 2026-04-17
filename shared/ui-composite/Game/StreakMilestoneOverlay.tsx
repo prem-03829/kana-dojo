@@ -148,7 +148,11 @@ export default function StreakMilestoneOverlay({
         >
           <div className='absolute inset-0 -z-10'>
             <Suspense fallback={<></>}>
-              <Decorations expandDecorations={false} interactive={false} />
+              <Decorations
+                expandDecorations={false}
+                interactive={false}
+                context='streak-milestone'
+              />
             </Suspense>
           </div>
 

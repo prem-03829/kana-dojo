@@ -72,7 +72,8 @@ const GRID_COL_CLASSES =
 const CHAR_SIZE_CLASSES =
   'text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl';
 const DIMMED_OPACITY_CLASS = 'opacity-25';
-const USE_DECORATIONS_IN_NON_MAIN_MENU = true;
+const ENABLE_MODE_SETUP_DECORATIONS = false;
+const ENABLE_STREAK_MILESTONE_DECORATIONS = true;
 
 const getBreakpointKey = (width: number): BreakpointKey => {
   if (width >= 1280) return 'xl';
@@ -332,12 +333,19 @@ const Decorations = ({
   expandDecorations,
   forceShow = false,
   interactive = false,
+  context = 'main-menu',
 }: {
   expandDecorations: boolean;
   forceShow?: boolean;
   interactive?: boolean;
+  context?: 'main-menu' | 'mode-setup' | 'streak-milestone';
 }) => {
-  if (!USE_DECORATIONS_IN_NON_MAIN_MENU) return null;
+  if (
+    (context === 'mode-setup' && !ENABLE_MODE_SETUP_DECORATIONS) ||
+    (context === 'streak-milestone' && !ENABLE_STREAK_MILESTONE_DECORATIONS)
+  ) {
+    return null;
+  }
 
   const [styles, setStyles] = useState<CharacterStyle[]>([]);
   const [visibleCount, setVisibleCount] = useState<number>(() =>
