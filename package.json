@@ -30,6 +30,7 @@
     "seo:check:live": "tsx scripts/seo-health-check.ts --live",
     "analyze": "ANALYZE=true npm run build",
     "bundle:check": "node scripts/bundle/check-bundle-size.js",
+    "vercel:ignore:test": "bash scripts/vercel-ignore-regression.sh",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

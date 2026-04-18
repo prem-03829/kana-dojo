@@ -7,6 +7,8 @@ import { Flame } from 'lucide-react';
 import { useHasFinePointer } from '@/shared/hooks/generic/useHasFinePointer';
 import { useClick } from '@/shared/hooks/generic/useAudio';
 import { cn } from '@/shared/utils/utils';
+import { useThemePreferences } from '@/features/Preferences';
+
 const Decorations = lazy(
   () => import('@/shared/ui-composite/Decorations/Decorations'),
 );
@@ -67,6 +69,7 @@ export default function StreakMilestoneOverlay({
 }: StreakMilestoneOverlayProps) {
   const hasFinePointer = useHasFinePointer();
   const { playClick } = useClick();
+  const { isGlassMode } = useThemePreferences();
 
   useEffect(() => {
     if (!milestone) return;
@@ -146,15 +149,17 @@ export default function StreakMilestoneOverlay({
           aria-modal='true'
           aria-label={`${milestone} in a row`}
         >
-          <div className='absolute inset-0 -z-10'>
-            <Suspense fallback={<></>}>
-              <Decorations
-                expandDecorations={false}
-                interactive={false}
-                context='streak-milestone'
-              />
-            </Suspense>
-          </div>
+          {!isGlassMode && (
+            <div className='absolute inset-0 -z-10'>
+              <Suspense fallback={<></>}>
+                <Decorations
+                  expandDecorations={false}
+                  interactive={false}
+                  context='streak-milestone'
+                />
+              </Suspense>
+            </div>
+          )}
 
           {/* Main Content */}
           <motion.div
@@ -200,4 +205,3 @@ export default function StreakMilestoneOverlay({
     </AnimatePresence>
   );
 }
-
