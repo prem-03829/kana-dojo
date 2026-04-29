@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { DEFAULT_CLICK_SOUND_ID } from '@/features/Preferences/data/audio/clickSounds';
+import type { ClickSoundId } from '@/features/Preferences/data/audio/clickSounds';
 
 interface PreferencesState {
   displayKana: boolean;
@@ -34,6 +36,9 @@ interface PreferencesState {
   pronunciationVoiceName: string | null;
   setPronunciationVoiceName: (name: string | null) => void;
 
+  pronunciationAutoPlay: boolean;
+  setPronunciationAutoPlay: (enabled: boolean) => void;
+
   furiganaEnabled: boolean;
   setFuriganaEnabled: (enabled: boolean) => void;
 
@@ -45,6 +50,15 @@ interface PreferencesState {
   selectedWallpaperId: string | null; // Currently active wallpaper
   setSelectedWallpaper: (id: string | null) => void;
   clearWallpaper: () => void;
+
+  // Visual effects
+  cursorTrailEffect: string;
+  setCursorTrailEffect: (id: string) => void;
+  clickEffect: string;
+  setClickEffect: (id: string) => void;
+
+  clickSoundId: ClickSoundId;
+  setClickSoundId: (id: ClickSoundId) => void;
 }
 
 const usePreferencesStore = create<PreferencesState>()(
@@ -73,6 +87,9 @@ const usePreferencesStore = create<PreferencesState>()(
       setPronunciationPitch: pitch => set({ pronunciationPitch: pitch }),
       pronunciationVoiceName: null,
       setPronunciationVoiceName: name => set({ pronunciationVoiceName: name }),
+      pronunciationAutoPlay: false,
+      setPronunciationAutoPlay: enabled =>
+        set({ pronunciationAutoPlay: enabled }),
       furiganaEnabled: false,
       setFuriganaEnabled: enabled => set({ furiganaEnabled: enabled }),
 
@@ -86,6 +103,14 @@ const usePreferencesStore = create<PreferencesState>()(
       setSelectedWallpaper: id => set({ selectedWallpaperId: id }),
 
       clearWallpaper: () => set({ selectedWallpaperId: null }),
+
+      // Visual effects
+      cursorTrailEffect: 'none',
+      setCursorTrailEffect: id => set({ cursorTrailEffect: id }),
+      clickEffect: 'none',
+      setClickEffect: id => set({ clickEffect: id }),
+      clickSoundId: DEFAULT_CLICK_SOUND_ID,
+      setClickSoundId: id => set({ clickSoundId: id }),
     }),
 
     {

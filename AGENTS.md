@@ -1,17 +1,8 @@
-# AI Assistant Guide
+﻿# AI Assistant Guide
 
 This file provides comprehensive guidance for AI coding assistants (GitHub Copilot, Claude, Kiro, Cursor, and other AI models) when working with the KanaDojo codebase.
 
 ---
-
-<!--
-## Quick Reference (temporarily commented out)
-| Task         | Command          |
-| ------------ | ---------------- |
-| Verify code  | `npm run check`  |
-| Run tests    | `npm run test`   |
-| Lint only    | `npm run lint`   |
--->
 
 **Never use `npm run build` for verification** — it takes 1-2 minutes and adds no validation value.
 
@@ -19,7 +10,9 @@ This file provides comprehensive guidance for AI coding assistants (GitHub Copil
 
 ## Shell Environment
 
-**Windows PowerShell**: use `;` — **Linux/macOS/WSL**: use `&&`.
+**Windows PowerShell**: use `;` 
+
+**Linux/macOS/WSL**: use `&&`
 
 <!-- examples commented out: `npm run lint; npm run test` -->
 
@@ -42,24 +35,9 @@ This file provides comprehensive guidance for AI coding assistants (GitHub Copil
 
 ---
 
-## Verification (compact)
-
-- Recommended: keep types and linting green locally before major PRs.
-
-<!--
-Primary verification commands (commented out here):
-- `npm run check`  # TypeScript + ESLint
-- `npm run test`   # Vitest
-- `npm run lint`
--->
-
-Use specific test commands when needed (examples are in repo docs).
-
----
-
 ## Architecture — feature-based (short)
 
-KanaDojo is organized by feature: app/, features/, shared/, core/. Keep business logic inside features and avoid cross-feature internal imports.
+KanaDojo is organised by feature: app/, features/, shared/, core/. Keep business logic inside features and avoid cross-feature internal imports.
 
 ---
 
@@ -88,7 +66,7 @@ KanaDojo is organized by feature: app/, features/, shared/, core/. Keep business
 ### Do's / Don'ts (short)
 
 - ✅ Use TypeScript types, path aliases, and translations.
-- ❌ Don’t add business logic to `app/` or create circular deps.
+- ❌ Don't add business logic to `app/` or create circular deps.
 
 ### Common tasks
 

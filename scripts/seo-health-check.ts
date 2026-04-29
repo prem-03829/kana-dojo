@@ -17,23 +17,32 @@ const BASE_URL = process.argv.includes('--live')
   ? 'https://kanadojo.com'
   : 'http://localhost:3000';
 
-const LOCALES = ['en', 'es'];
-
 // Key pages that MUST have proper SEO
 const CRITICAL_PAGES = [
   '/',
   '/kana',
+  '/kana/learn-hiragana',
+  '/kana/learn-katakana',
   '/kanji',
+  '/kanji/jlpt-n5',
+  '/kanji/jlpt-n4',
+  '/kanji/jlpt-n3',
+  '/kanji/jlpt-n2',
+  '/kanji/jlpt-n1',
   '/vocabulary',
+  '/vocabulary/jlpt-n5',
+  '/vocabulary/jlpt-n4',
+  '/vocabulary/jlpt-n3',
+  '/vocabulary/jlpt-n2',
+  '/vocabulary/jlpt-n1',
   '/conjugate',
   '/translate',
   '/academy',
   '/resources',
   '/faq',
   '/how-to-use',
-  '/tools',
-  '/tools/anki-converter',
-  '/tools/kana-chart',
+  '/anki-converter',
+  '/kana-chart',
   '/jlpt/n5',
   '/jlpt/n4',
   '/jlpt/n3',
@@ -44,16 +53,87 @@ const CRITICAL_PAGES = [
 // Pages that should have specific structured data
 const SCHEMA_EXPECTATIONS: Record<string, string[]> = {
   '/kana': ['CourseSchema', 'BreadcrumbList', 'LearningResource', 'FAQPage'],
+  '/kana/learn-hiragana': [
+    'CourseSchema',
+    'BreadcrumbList',
+    'LearningResource',
+    'FAQPage',
+  ],
+  '/kana/learn-katakana': [
+    'CourseSchema',
+    'BreadcrumbList',
+    'LearningResource',
+    'FAQPage',
+  ],
   '/kanji': ['CourseSchema', 'BreadcrumbList', 'LearningResource', 'FAQPage'],
+  '/kanji/jlpt-n5': [
+    'CourseSchema',
+    'BreadcrumbList',
+    'LearningResource',
+    'FAQPage',
+  ],
+  '/kanji/jlpt-n4': [
+    'CourseSchema',
+    'BreadcrumbList',
+    'LearningResource',
+    'FAQPage',
+  ],
+  '/kanji/jlpt-n3': [
+    'CourseSchema',
+    'BreadcrumbList',
+    'LearningResource',
+    'FAQPage',
+  ],
+  '/kanji/jlpt-n2': [
+    'CourseSchema',
+    'BreadcrumbList',
+    'LearningResource',
+    'FAQPage',
+  ],
+  '/kanji/jlpt-n1': [
+    'CourseSchema',
+    'BreadcrumbList',
+    'LearningResource',
+    'FAQPage',
+  ],
   '/vocabulary': ['CourseSchema', 'BreadcrumbList', 'LearningResource'],
+  '/vocabulary/jlpt-n5': [
+    'CourseSchema',
+    'BreadcrumbList',
+    'LearningResource',
+    'FAQPage',
+  ],
+  '/vocabulary/jlpt-n4': [
+    'CourseSchema',
+    'BreadcrumbList',
+    'LearningResource',
+    'FAQPage',
+  ],
+  '/vocabulary/jlpt-n3': [
+    'CourseSchema',
+    'BreadcrumbList',
+    'LearningResource',
+    'FAQPage',
+  ],
+  '/vocabulary/jlpt-n2': [
+    'CourseSchema',
+    'BreadcrumbList',
+    'LearningResource',
+    'FAQPage',
+  ],
+  '/vocabulary/jlpt-n1': [
+    'CourseSchema',
+    'BreadcrumbList',
+    'LearningResource',
+    'FAQPage',
+  ],
   '/academy': ['BreadcrumbList', 'ItemList', 'CollectionPage'],
   '/resources': ['BreadcrumbList', 'ItemList', 'LearningResource'],
   '/conjugate': ['BreadcrumbList', 'WebApplication'],
   '/faq': ['FAQPage', 'BreadcrumbList'],
   '/how-to-use': ['HowTo', 'BreadcrumbList'],
-  '/tools': ['BreadcrumbList'],
-  '/tools/kana-chart': ['BreadcrumbList'],
-  '/tools/anki-converter': ['FAQPage', 'HowTo'],
+  '/kana-chart': ['BreadcrumbList'],
+  '/anki-converter': ['FAQPage', 'HowTo'],
 };
 
 interface CheckResult {
@@ -71,11 +151,8 @@ function log(result: CheckResult) {
   results.push(result);
 }
 
-async function checkPageStatus(
-  locale: string,
-  path: string,
-): Promise<number | null> {
-  const url = `${BASE_URL}/${locale}${path}`;
+async function checkPageStatus(path: string): Promise<number | null> {
+  const url = `${BASE_URL}${path}`;
   try {
     const response = await fetch(url, { method: 'HEAD', redirect: 'follow' });
     return response.status;
@@ -84,9 +161,9 @@ async function checkPageStatus(
   }
 }
 
-async function checkMetaTags(locale: string, path: string): Promise<void> {
-  const url = `${BASE_URL}/${locale}${path}`;
-  const page = `${locale}${path}`;
+async function checkMetaTags(path: string): Promise<void> {
+  const url = `${BASE_URL}${path}`;
+  const page = path;
 
   try {
     const response = await fetch(url);
@@ -157,6 +234,21 @@ async function checkMetaTags(locale: string, path: string): Promise<void> {
       log({ page, status: 'warn', message: 'Missing canonical URL' });
     }
 
+    // Canonical URL quality check
+    const canonicalMatch = html.match(
+      /<link[^>]*rel=["']canonical["'][^>]*href=["']([^"']+)["']/i,
+    );
+    if (canonicalMatch && canonicalMatch[1]) {
+      const canonicalHref = canonicalMatch[1];
+      if (!canonicalHref.startsWith('https://kanadojo.com/')) {
+        log({
+          page,
+          status: 'warn',
+          message: `Canonical not on expected host: ${canonicalHref}`,
+        });
+      }
+    }
+
     // Check structured data
     const jsonLdMatches = html.match(
       /<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi,
@@ -195,11 +287,21 @@ async function checkMetaTags(locale: string, path: string): Promise<void> {
       html.includes('hreflang="en"') || html.includes("hreflang='en'");
     const hreflangEs =
       html.includes('hreflang="es"') || html.includes("hreflang='es'");
+    const hreflangXDefault =
+      html.includes('hreflang="x-default"') ||
+      html.includes("hreflang='x-default'");
     if (!hreflangEn || !hreflangEs) {
       log({
         page,
         status: 'warn',
         message: 'Missing hreflang tags for all locales',
+      });
+    }
+    if (!hreflangXDefault) {
+      log({
+        page,
+        status: 'warn',
+        message: 'Missing hreflang x-default tag',
       });
     }
   } catch (error) {
@@ -298,11 +400,21 @@ async function checkLlmsTxt(): Promise<void> {
     if (response.ok) {
       const text = await response.text();
       const sections = (text.match(/^## /gm) || []).length;
+      const hasKanaRoute = text.includes('https://kanadojo.com/kana');
+      const hasKanjiRoute = text.includes('https://kanadojo.com/kanji');
+      const hasVocabularyRoute = text.includes('https://kanadojo.com/vocabulary');
       log({
         page: 'llms.txt',
         status: 'pass',
         message: `llms.txt accessible with ${sections} sections (GEO ready)`,
       });
+      if (!hasKanaRoute || !hasKanjiRoute || !hasVocabularyRoute) {
+        log({
+          page: 'llms.txt',
+          status: 'warn',
+          message: 'Core dojo routes missing from llms.txt route map',
+        });
+      }
     } else {
       log({
         page: 'llms.txt',
@@ -328,32 +440,28 @@ async function main() {
   await checkLlmsTxt();
   await checkIndexNow();
 
-  // 2. Check critical pages across locales
-  for (const locale of LOCALES) {
-    console.log(`\n🌐 Checking locale: ${locale}`);
-    console.log('─'.repeat(40));
+  // 2. Check critical pages
+  console.log('\n🌐 Checking critical routes');
+  console.log('─'.repeat(40));
+  for (const path of CRITICAL_PAGES) {
+    const status = await checkPageStatus(path);
 
-    for (const path of CRITICAL_PAGES) {
-      const status = await checkPageStatus(locale, path);
-      const page = `${locale}${path}`;
-
-      if (status === null) {
-        log({ page, status: 'fail', message: 'Unreachable' });
-      } else if (status === 200) {
-        log({ page, status: 'pass', message: `HTTP 200 OK` });
-      } else if (status >= 300 && status < 400) {
-        log({ page, status: 'warn', message: `Redirect (HTTP ${status})` });
-      } else {
-        log({ page, status: 'fail', message: `HTTP ${status}` });
-      }
+    if (status === null) {
+      log({ page: path, status: 'fail', message: 'Unreachable' });
+    } else if (status === 200) {
+      log({ page: path, status: 'pass', message: `HTTP 200 OK` });
+    } else if (status >= 300 && status < 400) {
+      log({ page: path, status: 'warn', message: `Redirect (HTTP ${status})` });
+    } else {
+      log({ page: path, status: 'fail', message: `HTTP ${status}` });
     }
   }
 
-  // 3. Deep meta tag check on English pages
-  console.log('\n🏷️  Deep Meta Tag Analysis (en)');
+  // 3. Deep meta tag check
+  console.log('\n🏷️  Deep Meta Tag Analysis');
   console.log('─'.repeat(40));
   for (const path of CRITICAL_PAGES) {
-    await checkMetaTags('en', path);
+    await checkMetaTags(path);
   }
 
   // 4. Summary
